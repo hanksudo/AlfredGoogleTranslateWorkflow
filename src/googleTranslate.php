@@ -2,6 +2,8 @@
 
 function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = NULL)
 {
+	$defaultLanguage = 'zh-TW';
+
 	$knownLanguages = array(
 		'auto' => 'Automatic',
 		'af' => 'Afrikaans',
@@ -76,7 +78,10 @@ function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = N
 	if ($targetLanguage == NULL) {
 		$requestParts = explode(' ', $request);
 		$targetLanguage = $requestParts[0];
-		array_shift($requestParts);
+
+		if (!array_key_exists($targetLanguage, $knownLanguages)) $targetLanguage = $defaultLanguage;
+		if (count($requestParts) > 1) array_shift($requestParts);
+
 		$phrase = implode(' ', $requestParts);
 	} else {
 		$phrase = $request;
@@ -100,7 +105,7 @@ function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = N
 
 	$json = json_decode($out);
 	$sourceLanguage = $json->src;
-	
+
 	if (isset($json->dict)) {
 		$googleResults = $json->dict[0]->entry;
 		if (is_array($googleResults)) {
@@ -131,5 +136,7 @@ function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = N
 }
 
 // googleTranslate('über', 'auto', 'en');
-
+// googleTranslate('ja cool', 'auto'); // correct language
+// googleTranslate('jp cool', 'auto'); // wrong language
+// googleTranslate('cool', 'auto'); // without target language
 ?>
