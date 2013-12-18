@@ -79,8 +79,11 @@ function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = N
 		$requestParts = explode(' ', $request);
 		$targetLanguage = $requestParts[0];
 
-		if (!array_key_exists($targetLanguage, $knownLanguages)) $targetLanguage = $defaultLanguage;
-		if (count($requestParts) > 1) array_shift($requestParts);
+		if (!array_key_exists($targetLanguage, $knownLanguages)) {
+			$targetLanguage = $defaultLanguage;
+		} else {
+			array_shift($requestParts);
+		}
 
 		$phrase = implode(' ', $requestParts);
 	} else {
@@ -137,6 +140,6 @@ function googleTranslate($request, $sourceLanguage = 'auto', $targetLanguage = N
 
 // googleTranslate('über', 'auto', 'en');
 // googleTranslate('ja cool', 'auto'); // correct language
-// googleTranslate('jp cool', 'auto'); // wrong language
+// googleTranslate('I Love you', 'auto'); // wrong language
 // googleTranslate('cool', 'auto'); // without target language
 ?>
